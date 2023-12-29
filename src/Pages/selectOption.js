@@ -13,14 +13,12 @@ const geoExtractor = (data) => {
     }
   })
 }
-
 // console.log(villagesJson);
 
 const provinceData = geoExtractor(provincesJson.provinces, 'provinces')
 const districtsData = geoExtractor(districtsjSON.districts, 'districts')
 const communesData = geoExtractor(communesJosn.communes, 'communes')
 const villagsData = geoExtractor(villagesJson.villages, 'villages')
-
 // console.log(communesData);
 
 const SelectOption = () => {
@@ -35,12 +33,12 @@ const SelectOption = () => {
   const [selectedCommune, setSelectedCommune] = useState('');
   const [selectedVillage, setSelectedVillage] = useState('');
 
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState(false);
 
 
   const handleProvinceSelect = (provinceId) => {
     const province = provinces.find(obj => obj.id === provinceId)
-    setSelectedProvince(province.name.latin);
+    setSelectedProvince(province);
     setSelectedDistrict('');
     setSelectedCommune('');
     setSelectedVillage('');
@@ -51,26 +49,29 @@ const SelectOption = () => {
 
   const handleDistrictSelect = (districtId) => {
     const district = districts.find(district => district.id === districtId)
-    setSelectedDistrict(district.name.latin);
+    setSelectedDistrict(district);
     setSelectedCommune('');
     setSelectedVillage('');
     setCommunes(communesData.filter(commune => commune.id.startsWith(districtId)))
     setVillages([])
   };
 
+
   const handleCommuneSelect = (communeId) => {
     const selectCommue = communes.find(commune => commune.id === communeId);
-    setSelectedCommune(selectCommue.name.latin);
+    setSelectedCommune(selectCommue);
     setSelectedVillage(''); 
     setVillages(villagsData.filter(village => village.id.startsWith(communeId)))
   }
 
   const handleVillageSelect = (villageId) => {
     const selectVillage = villages.find(village => village.id === villageId);
-    setSelectedVillage(selectVillage.name.latin)
+    setSelectedVillage(selectVillage)
   }
 
   const handleSubmit = () => {
+
+    setResult(true)
 
     setResult({
       province:selectedProvince,
@@ -78,11 +79,8 @@ const SelectOption = () => {
       commune:selectedCommune,
       village:selectedVillage,
     })
-    
+
     setProvinces([])
-    setDistricts([]);
-    setCommunes([]);
-    setVillages([]);
   };
 
   const handleClear = () => {
@@ -92,7 +90,7 @@ const SelectOption = () => {
     setSelectedCommune('');
     setSelectedVillage('');
 
-    setProvinces([])
+    setProvinces([]);
     setDistricts([]);
     setCommunes([]);
     setVillages([]);
@@ -160,11 +158,28 @@ const SelectOption = () => {
       </div>
 
       <div>
-        <h3>Your selected</h3>
-        {result.province && <p>Province: {result.province}</p>}
-        {result.district && <p>District: {result.district}</p>}
-        {result.commune && <p>Commune: {result.commune}</p>}
-        {result.village && <p>Village: {result.village}</p>}
+          
+          {
+            result
+
+            ?
+
+            <div>
+              <h3>Your selected</h3>
+              <p>Province: {selectedProvince.name.latin}</p>
+              <p>District: {selectedDistrict.name.latin}</p>
+              <p>Commune: {selectedCommune.name.latin}</p>
+              <p>Village: {selectedVillage.name.latin}</p>
+
+
+            </div>
+
+            :
+
+            ''
+
+          }
+
       </div>
 
     </div>
