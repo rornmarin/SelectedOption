@@ -1,0 +1,25 @@
+
+
+select{
+
+    width: 30%;
+    font-size: 1rem;
+    padding: 0.1em 6em 0.1em 0.1em;
+    background-color: #fff;
+    border: 1px solid #caced1;
+    border-radius: 0.25rem;
+
+    /* cursor: pointer; */
+}
+button{
+    background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 0.25rem;
+  margin: 20px;
+}
