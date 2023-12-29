@@ -13,17 +13,19 @@ const geoExtractor = (data) => {
     }
   })
 }
+
 // console.log(villagesJson);
 
 const provinceData = geoExtractor(provincesJson.provinces, 'provinces')
 const districtsData = geoExtractor(districtsjSON.districts, 'districts')
 const communesData = geoExtractor(communesJosn.communes, 'communes')
 const villagsData = geoExtractor(villagesJson.villages, 'villages')
+
 // console.log(communesData);
 
 const SelectOption = () => {
 
-  const [provinces] = useState(provinceData);
+  const [provinces,setProvinces] = useState(provinceData);
   const [districts, setDistricts] = useState([]);
   const [communes, setCommunes] = useState([]);
   const [villages, setVillages] = useState([]);
@@ -56,7 +58,6 @@ const SelectOption = () => {
     setVillages([])
   };
 
-
   const handleCommuneSelect = (communeId) => {
     const selectCommue = communes.find(commune => commune.id === communeId);
     setSelectedCommune(selectCommue.name.latin);
@@ -77,14 +78,21 @@ const SelectOption = () => {
       commune:selectedCommune,
       village:selectedVillage,
     })
+    
+    setProvinces([])
+    setDistricts([]);
+    setCommunes([]);
+    setVillages([]);
   };
 
   const handleClear = () => {
+
     setSelectedProvince('');
     setSelectedDistrict('');
     setSelectedCommune('');
     setSelectedVillage('');
 
+    setProvinces([])
     setDistricts([]);
     setCommunes([]);
     setVillages([]);
@@ -94,6 +102,7 @@ const SelectOption = () => {
     // commune: '',
     // village: '',
     });
+    setProvinces(provinceData)
     
   };
 
