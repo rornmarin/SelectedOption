@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "../components/select";
@@ -73,7 +72,7 @@ const SelectOption = () => {
   };
 
   const handleDistrictSelect = (districtId) => {
-    setSelectedDistrict(districts.find(dis => dis.id == parseInt(districtId)));
+    setSelectedDistrict(districts.find(dis => dis.id === parseInt(districtId)));
     fetchCommunesData(districtId);
     setSelectedCommune('');
     setSelectedVillage('');
@@ -82,14 +81,14 @@ const SelectOption = () => {
   };
 
   const handleCommuneSelect = (communeId) => {
-    setSelectedCommune(communes.find(commune => commune.id == parseInt(communeId)));
+    setSelectedCommune(communes.find(commune => commune.id === parseInt(communeId)));
     fetchVillagesData(communeId);
     setSelectedVillage('');
     setVillages([]);
   };
 
   const handleVillageSelect = (villageId) => {
-    setSelectedVillage(villages.find(village => village.id == parseInt(villageId)));
+    setSelectedVillage(villages.find(village => village.id === parseInt(villageId)));
     // fetchVillagesData(villageId);
   };
 
@@ -106,6 +105,10 @@ const SelectOption = () => {
     setResult({
       
     })
+
+    setProvinces(provinces)
+
+    setResult(false)
   };
 
   const handleSubmit = () => {
@@ -123,56 +126,48 @@ const SelectOption = () => {
 
   };
 
-
   return (
     <div>
-
       <h2>Province</h2>
 
-      <Select data={provinces} onSelect={handleProvinceSelect} selectOption={'Select province'} />
+      <Select data={provinces} onSelect={handleProvinceSelect} selectOption={'Select province'}></Select>
 
       <h2>District</h2>
 
-      <Select data={districts} onSelect={handleDistrictSelect} selectOption={'Select district'} />
+      <Select data={districts} onSelect={handleDistrictSelect} selectOption={'Select district'}></Select>
 
-      <h2>Commune</h2>
+      <h2>Communes</h2>
 
-      <Select data={communes} onSelect={handleCommuneSelect} selectOption={'Select commune'} />
+      <Select data={communes} onSelect={handleCommuneSelect} selectOption={'Select commune'}/>
 
-      <h2>village</h2>
+      <h2>Villages</h2>
 
-      <Select data={villages} onSelect={handleVillageSelect} selectOption={'Select village'}/>
+      <Select data={villages} onSelect={handleVillageSelect} selectOption={'Select villages'} />
 
+      <button type="button" onClick={handleClear}>Clear</button>
+      <button type="button"  onClick={handleSubmit}>Submit</button>
       <div>
-        <button type="button" onClick={handleSubmit}>Submit</button>
-        <button type="button" onClick={handleClear}>Clear</button>
-      </div>
-
-      <div>
+        {
+          result 
           
-          {
-            result
+          ?
 
-            ?
+          <div>
+            <h3>Your seleted</h3>
+            <p>Province: {selectedProvince.name}</p>
+            <p>district: {selectedDistrict.name}</p>
+            <p>commune: {selectedCommune.name}</p>
+            <p>village: {selectedVillage.name}</p>
+          </div> 
 
-            <div>
+          : 
 
-              <h3>Your selected</h3>
-              <p>province:{selectedProvince.name.latin}</p>
-              <p>District:{selectedDistrict.name.latin}</p>
-              <p>commune:{selectedCommune.name.latin}</p>              
-              <p>village:{selectedVillage.name.latin}</p>
-            </div>
-
-            :
-
-            ''
-
-          }
-
+          ''
+        }
       </div>
-
     </div>
+
+    
   );
 };
 

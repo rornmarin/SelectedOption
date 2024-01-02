@@ -7,19 +7,10 @@ export default function select({data,onSelect,selectOption}) {
           <option value="">{selectOption}</option>
           {data.map((data) => (
             <option key={data.id} value={data.id}>
-            {data.name.latin} / {data.name.km}
+            {data.name} / {data.name_km}
             </option>
           ))}
       </select>
     </div>
   )
 }
-
-{/* <select onChange={(e) => handleDistrictSelect(e.target.value)} >
-        <option value="">Select a district</option>
-        {districts.map((district) => (
-          <option key={district.id} value={district.id}>
-            {district.name} / {district.name_km}
-          </option>
-        ))}
-      </select> */}
