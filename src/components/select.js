@@ -15,3 +15,11 @@ export default function select({data,onSelect,selectOption}) {
   )
 }
 
+{/* <select onChange={(e) => handleDistrictSelect(e.target.value)} >
+        <option value="">Select a district</option>
+        {districts.map((district) => (
+          <option key={district.id} value={district.id}>
+            {district.name} / {district.name_km}
+          </option>
+        ))}
+      </select> */}

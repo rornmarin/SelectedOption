@@ -1,30 +1,11 @@
-import React, { useState } from "react";
-import provincesJson from './provinces.json';
-import districtsjSON from './districts.json';
-import communesJosn from './communes.json';
-import villagesJson from './villages.json';
-import Select from '../components/select'
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Select from "../components/select";
 import './style.css'
 
-const geoExtractor = (data) => {
-  return Object.keys(data).map(key => {
-    return {
-      id: key,
-      name: data[key].name 
-    }
-  })
-}
-// console.log(villagesJson);
-
-const provinceData = geoExtractor(provincesJson.provinces, 'provinces')
-const districtsData = geoExtractor(districtsjSON.districts, 'districts')
-const communesData = geoExtractor(communesJosn.communes, 'communes')
-const villagsData = geoExtractor(villagesJson.villages, 'villages')
-// console.log(communesData);
-
 const SelectOption = () => {
-
-  const [provinces,setProvinces] = useState(provinceData);
+  const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [communes, setCommunes] = useState([]);
   const [villages, setVillages] = useState([]);
@@ -36,66 +17,110 @@ const SelectOption = () => {
 
   const [result, setResult] = useState(false);
 
+  const fetchProvinceData = async () => {
+    try {
+      const response = await axios.get('https://api.staging.goldenqueenhospital.com/v1/pumi');
+      const fetchedProvinces = response.data.data;
+      setProvinces(fetchedProvinces);
+    } catch (error) {
+      console.error('Error fetching province data:', error);
+    }
+  };
+
+  const fetchDistrictData = async (provinceId) => {
+    try {
+      const response = await axios.get(`https://api.staging.goldenqueenhospital.com/v1/pumi/districts?parent_id=${provinceId}`);
+      const fetchedDistricts = response.data.data;
+      setDistricts(fetchedDistricts);
+    } catch (error) {
+      console.error('Error fetching district data:', error);
+    }
+  };
+
+  const fetchCommunesData = async (districtId) => {
+    try {
+      const response = await axios.get(`https://api.staging.goldenqueenhospital.com/v1/pumi/communes?parent_id=${districtId}`);
+      const fetchedCommunes = response.data.data;
+      setCommunes(fetchedCommunes);
+    } catch (error) {
+      console.error('Error fetching commune data:', error);
+    }
+  };
+
+  const fetchVillagesData = async (communeId) => {
+    try {
+      const response = await axios.get(`https://api.staging.goldenqueenhospital.com/v1/pumi/villages?parent_id=${communeId}`);
+      const fetchedVillages = response.data.data;
+      setVillages(fetchedVillages);
+    } catch (error) {
+      console.error('Error fetching village data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProvinceData();
+  }, []);
 
   const handleProvinceSelect = (provinceId) => {
-    const province = provinces.find(obj => obj.id === provinceId)
-    setSelectedProvince(province);
-    console.log(province);
+    fetchDistrictData(provinceId);
+    setSelectedProvince(provinces.find(pro => pro.id === parseInt(provinceId)));
     setSelectedDistrict('');
     setSelectedCommune('');
     setSelectedVillage('');
-    setDistricts(districtsData.filter(district => district.id.startsWith(provinceId)))
-    setCommunes([])
-    setVillages([])
+    setDistricts([]);
+    setCommunes([]);
+    setVillages([]);
   };
 
   const handleDistrictSelect = (districtId) => {
-    const district = districts.find(district => district.id === districtId)
-    setSelectedDistrict(district);
+    setSelectedDistrict(districts.find(dis => dis.id == parseInt(districtId)));
+    fetchCommunesData(districtId);
     setSelectedCommune('');
     setSelectedVillage('');
-    setCommunes(communesData.filter(commune => commune.id.startsWith(districtId)))
-    setVillages([])
+    setCommunes([]);
+    setVillages([]);
   };
-
 
   const handleCommuneSelect = (communeId) => {
-    const selectCommue = communes.find(commune => commune.id === communeId);
-    setSelectedCommune(selectCommue);
-    setSelectedVillage(''); 
-    setVillages(villagsData.filter(village => village.id.startsWith(communeId)))
-  }
-
-  const handleVillageSelect = (villageId) => {
-    const selectVillage = villages.find(village => village.id === villageId);
-    setSelectedVillage(selectVillage)
-  }
-
-  const handleSubmit = () => {
-
-    setResult(true)
-
-    setProvinces([])
+    setSelectedCommune(communes.find(commune => commune.id == parseInt(communeId)));
+    fetchVillagesData(communeId);
+    setSelectedVillage('');
+    setVillages([]);
   };
 
-  const handleClear = () => {
+  const handleVillageSelect = (villageId) => {
+    setSelectedVillage(villages.find(village => village.id == parseInt(villageId)));
+    // fetchVillagesData(villageId);
+  };
 
+
+  const handleClear = () => {
     setSelectedProvince('');
     setSelectedDistrict('');
     setSelectedCommune('');
     setSelectedVillage('');
 
-    setProvinces([]);
     setDistricts([]);
     setCommunes([]);
     setVillages([]);
     setResult({
+      
+    })
+  };
 
-    });
-    setProvinces(provinceData)
+  const handleSubmit = () => {
+     
+    setResult(true)
 
-    setResult(false)
-    
+    setResult({
+      province:selectedProvince,
+      district:selectedDistrict,
+      communes:selectedCommune,
+      village:selectedVillage
+    })
+
+    setProvinces([])
+
   };
 
 
